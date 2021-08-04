@@ -1,7 +1,7 @@
 // Game values
 let min = 1,
     max = 10,
-    winningNum = 2,
+    winningNum = getRandomNum(min, max),
     guessesLeft = 3;
 
 // UI Elements
@@ -16,6 +16,13 @@ const game = document.querySelector('#game'),
 minNum.textContent = min;
 maxNum.textContent = max;
 
+// Play again event listener
+game.addEventListener('mousedown', function (e) {
+    if (e.target.className === 'play-again') {
+        window.location.reload();
+    }
+});
+
 // Listen for guess
 guessBtn.addEventListener('click', function () {
     let guess = parseInt(guessInput.value);
@@ -28,7 +35,7 @@ guessBtn.addEventListener('click', function () {
     // Check if won
     if (guess === winningNum) {
         // Game over - won
-        gameOver(true, `${winningNum} está correto!`);
+        gameOver(true, `${winningNum} está correto. Você venceu!`);
 
     } else {
         // Wrong number
@@ -36,7 +43,7 @@ guessBtn.addEventListener('click', function () {
 
         if (guessesLeft === 0) {
             // Game over - lost
-            gameOver(false, `Game Over. O número correto era: ${winningNum}.`);
+            gameOver(false, `Game Over. O número correto era ${winningNum}.`);
         } else {
             // Game continues - answer wrong
 
@@ -47,7 +54,7 @@ guessBtn.addEventListener('click', function () {
             guessInput.value = '';
 
             // Tell user its the wrong number
-            setMessage(`${guess} não é o número correto. Você ainda tem ${guessesLeft} chance(s) de acertar!`, 'red');
+            setMessage(`${guess} não é o número correto. Você ainda tem ${guessesLeft} chance(s).`, 'red');
         }
     }
 });
@@ -65,6 +72,15 @@ function gameOver(won, msg) {
     message.style.color = color;
     // Set message
     setMessage(msg);
+
+    // PLay Again?
+    guessBtn.value = 'Tentar novamente';
+    guessBtn.className += 'play-again';
+}
+
+// Get Winning Number
+function getRandomNum(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 // Set message
